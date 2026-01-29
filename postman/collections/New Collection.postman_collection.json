@@ -6,7 +6,7 @@
   },
   "item": [
     {
-      "name": "welcome",
+      "name": "welcome-request",
       "id": "b0b3f7ac-4740-4d10-b578-c553ce3218ea",
       "request": {
         "method": "GET",
@@ -20,7 +20,7 @@
   ],
   "variable": [
     {
-      "id": "84788928-85d4-4db4-a844-478f32e99ccb",
+      "id": "3e5ea7bf-08be-430e-8619-9e553a83649a",
       "key": "api",
       "value": ""
     }
