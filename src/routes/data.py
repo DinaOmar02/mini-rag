@@ -1,7 +1,7 @@
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter, Depends, UploadFile
 import os
 
-from helpers.config import get_settings, Settings
+from helpers import get_settings, Settings
 from controllers import DataController
 
 data_router = APIRouter(
@@ -11,8 +11,7 @@ data_router = APIRouter(
 
 
 @data_router.post("/upload/{project_id}")
-async def upload_file(project_id: str, app_settings:Settings = Depends(get_settings)):
-
+async def upload_file(project_id: str,file: UploadFile,
+                       app_settings:Settings = Depends(get_settings)):
     
-    
-
+    return DataController.validate_file_type(file)
