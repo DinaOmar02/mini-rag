@@ -1,0 +1,28 @@
+{
+  "info": {
+    "_postman_id": "81ff1f88-4121-40f6-ac46-438e5e445614",
+    "name": "mini-rag-app",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "welcome-request",
+      "id": "b0b3f7ac-4740-4d10-b578-c553ce3218ea",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "3e5ea7bf-08be-430e-8619-9e553a83649a",
+      "key": "api",
+      "value": ""
+    }
+  ]
+}
