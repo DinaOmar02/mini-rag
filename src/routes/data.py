@@ -28,3 +28,9 @@ async def upload_file(project_id: str,file: UploadFile,
     
     return isvalid, result_signal
 
+    project_dir_path = DataController().get_project_path(project_id=project_id)
+    file_path = os.path.join(
+                            project_dir_path,
+                            file.filename)
+
+
