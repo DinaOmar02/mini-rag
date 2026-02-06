@@ -1,6 +1,6 @@
 from fastapi import UploadFile
 from models import ResponseSignal
-from controllers import BaseController
+from .BaseController import BaseController
 
 class DataController(BaseController):
 
