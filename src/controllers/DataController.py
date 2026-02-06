@@ -7,13 +7,14 @@ class DataController(BaseController):
     def __init__(self):
         super().__init__()
 
-    def validate_file_type(self,file: UploadFile):
+    def validate_uploaded_file(self,file: UploadFile):
         
-        self.response_signal = ResponseSignal()
+        scale = 1024 * 1024  # Convert bytes to megabytes
+
         if file.content_type not in self.app_settings.FILE_ALLOWED_TYPES:
-            return False, self.response_signal.FILE_TYPE_INVALID
+            return False, ResponseSignal.FILE_TYPE_INVALID.value
         
-        if file.size > self.app_settings.FILE_MAX_SIZE:
-            return False, self.response_signal.FILE_SIZE_EXCEEDED
+        if file.size > self.app_settings.FILE_MAX_SIZE * scale:
+            return False, ResponseSignal.FILE_SIZE_EXCEEDED.value
         
-        return True, self.response_signal.UPLOAD_SUCCESS
+        return True, ResponseSignal.FILE_UPLOAD_SUCCESS.value
