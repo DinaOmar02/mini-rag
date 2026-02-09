@@ -6,6 +6,7 @@ from models import ResponseSignal
 import aiofiles
 import os
 import logging
+from .schemes import ProcessRequest
 
 
 logger = logging.getLogger('uvicorn.error')
@@ -31,7 +32,7 @@ async def upload_file(project_id: str,file: UploadFile,
                      }
             )
     
-    project_file_path = data_controller.generate_file_name(
+    project_file_path, file_id = data_controller.generate_filepath(
         original_filename=file.filename, project_id=project_id) 
     
 
@@ -51,6 +52,17 @@ async def upload_file(project_id: str,file: UploadFile,
                                 
     return JSONResponse(
         content={
-            "message": f"File {file.filename} uploaded successfully."
+            "message": f"File {file.filename} uploaded successfully.",
+            "file_id": file_id
         }
     )
+
+
+@data_router.post("/process/{project_id}")
+async def process_endpoint(project_id: str, process_request: ProcessRequest):
+
+    file_id = ProcessRequest.file_id
+
+    return file_id
+
+
