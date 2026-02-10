@@ -34,20 +34,22 @@ class DataController(BaseController):
             proj_path,
               random_key + "_" + cleaned_filename
               )
+        
+        file_id = random_key + "_" + cleaned_filename
 
         while os.path.exists(new_filepath):
             random_key = self.generate_random_string(length=12)
             new_filepath = os.path.join(
                 proj_path,
-                random_key + "_" + cleaned_filename
+                file_id
             )
 
-        return new_filepath, random_key
+        return new_filepath, file_id
 
     def get_clean_file_name(self, filename: str):
 
         # Remove special characters using regex
-        cleaned_name = re.sub(r'[^\w]', '', filename)
+        cleaned_name = re.sub(r'[^\w\.]', '', filename)
        
         # Replace spaces with underscores
         cleaned_name = cleaned_name.replace(" ", "_")
