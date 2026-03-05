@@ -1,4 +1,4 @@
-from models.enums import DataBaseEnum
+from .enums import DataBaseEnum
 
 from .BaseDataModel import BaseDataModel
 from .db_schemes import Project
