@@ -1,3 +1,5 @@
+from urllib import request
+
 from fastapi import FastAPI, APIRouter, Depends, UploadFile, status, Request
 from fastapi.responses import JSONResponse
 from helpers import get_settings, Settings
@@ -8,6 +10,8 @@ import os
 import logging
 from .schemes import ProcessRequest
 from models.ProjectModel import ProjectModel
+from models.db_schemes import DataChunk
+from models.ChunkModel import ChunkModel
 
 
 logger = logging.getLogger('uvicorn.error')
@@ -66,23 +70,29 @@ async def upload_file(request:Request, project_id: str,file: UploadFile,
 
 
 @data_router.post("/process/{project_id}")
-async def process_endpoint(project_id: str, process_request: ProcessRequest):
+async def process_endpoint(request: Request, project_id: str, process_request: ProcessRequest):
 
     file_id = process_request.file_id
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
 
+    project_model = ProjectModel(
+        db_client= request.app.db_client
+    )
+
+    project = await project_model.get_project_or_create_one(project_id=project_id)
+
     process_controller = ProcessController(project_id=project_id)
 
     file_contetn = process_controller.get_file_content(file_id=file_id)
 
-    content_chunks = process_controller.get_content_chunks(
+    file_chunks = process_controller.get_content_chunks(
         content=file_contetn,
         chunk_size=chunk_size,
         chunk_overlap=overlap_size
     )
 
-    if content_chunks is None or len(content_chunks) == 0:
+    if file_chunks is None or len(file_chunks) == 0:
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
@@ -90,4 +100,21 @@ async def process_endpoint(project_id: str, process_request: ProcessRequest):
             }
         )
     
-    return content_chunks
+    
+    file_chunks_records = [
+        DataChunk(
+        chunk_text= chunk.page_content,
+        chunk_metadata= chunk.metadata,
+        chunk_project_id= i+1,
+        chunk_order= project.id,
+        )
+
+        for i, chunk in enumerate(file_chunks)
+    ]
+
+    chunk_model = ChunkModel(db_client=request.app.db_client)
+    
+    no_records = chunk_model.insert_many_chunks(file_chunks_records)
+
+    return no_records
+
