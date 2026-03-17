@@ -1,3 +1,5 @@
+from enum import unique
+
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from bson.objectid import ObjectId
@@ -18,5 +20,20 @@ class Project(BaseModel):
     class Config:  
         arbitrary_types_allowed = True    # to make pydantic ignore and skip (dont make error) unkown types like ObjectId
         populate_by_name = True
+
+
+    @classmethod
+    def get_indexes(cls):
+
+        return [
+            {
+              "key": [
+                  ("project_id", 1)
+              ],
+              "name": "project_id_index_1",
+              "unique": True
+
+          }
+        ]
 
 
