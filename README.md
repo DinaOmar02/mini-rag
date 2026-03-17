@@ -31,3 +31,20 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 ```
+
+## Run Docker Compose Services
+```bash
+cd docker
+cp .env.example .env
+```
+
+```bash
+cd docker
+sudo docker compose up -d
+```
+
+
+## Run the FastAPI server
+```bash
+uvicorn main:app --reload --port 5000
+```
