@@ -19,8 +19,6 @@ class Project(BaseModel):
 
     class Config:  
         arbitrary_types_allowed = True    # to make pydantic ignore and skip (dont make error) unkown types like ObjectId
-        populate_by_name = True
-
 
     @classmethod
     def get_indexes(cls):

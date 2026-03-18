@@ -9,13 +9,10 @@ class DataChunk(BaseModel):
     chunk_metadata: dict
     chunk_project_id: ObjectId
     chunk_order: int = Field(..., gt=0)
-
-
+    chunk_asset_id: ObjectId
 
     class Config:
         arbitrary_types_allowed = True
-        populate_by_name = True
-
 
     @classmethod
     def get_indexes(cls):
@@ -25,10 +22,8 @@ class DataChunk(BaseModel):
                 "key": [
                     ("chunk_project_id", 1),
                 ],
-                " name": "project_id_index_1",
+                "name": "project_id_index_1",
                 "unique": False
             }
         ]
-                             
-                             
-                  
+                                         

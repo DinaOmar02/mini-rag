@@ -33,6 +33,9 @@ class ProcessController(BaseController):
         ext = self.get_file_extension(file_id= file_id)
         logger.info(f"Processing file with extension: {ext}")
 
+        if not os.path.exists(file_path):
+            return None
+
         if ext == ProcessingEnum.PDF.value:
             return PyMuPDFLoader(file_path, encoding = "utf-8")
         elif ext == ProcessingEnum.TXT.value:
@@ -46,7 +49,12 @@ class ProcessController(BaseController):
 
         loader = self.get_file_loader(file_id=file_id)
 
-        return loader.load()
+        if loader:
+         return loader.load()
+        
+        else:
+         return None
+         
     
 
     def get_content_chunks(self, content: list, chunk_size: int = 1000,  chunk_overlap: int = 0):    

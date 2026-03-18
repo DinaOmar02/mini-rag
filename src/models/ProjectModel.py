@@ -1,5 +1,4 @@
 from .enums import DataBaseEnum
-
 from .BaseDataModel import BaseDataModel
 from .db_schemes import Project
 
@@ -16,7 +15,7 @@ class ProjectModel(BaseDataModel):
         return instance
 
     async def init_collection(self):
-        all_colections = self.db_client.list_collection_names()
+        all_colections = await self.db_client.list_collection_names()
         if DataBaseEnum.COLLECTION_PROJECT_NAME.value not in all_colections:
              self.collection = self.db_client[DataBaseEnum.COLLECTION_PROJECT_NAME.value]
              indexes = Project.get_indexes()
