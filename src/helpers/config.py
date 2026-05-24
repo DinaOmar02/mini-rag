@@ -12,6 +12,17 @@ class Settings(BaseSettings):
     MONGODB_URL: str
     MONGODB_DATABASE:str
 
+    GENERATION_BACKEND: str
+    EMBEDDING_BACKEND: str
+
+    GENERATION_MODEL_ID: str
+    EMBEDDING_MODEL_ID: str
+    EMBEDDING_MODEL_SIZE: int
+
+    DEFAULT_INPUT_MAX_CHARACTERS: int
+    DEFAULT_GENERATION_MAX_OUTPUT: int
+    DEFAULT_GENERATION_TEMPERATURE: float
+
     class Config:
         env_file = ".env"
 
