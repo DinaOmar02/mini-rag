@@ -99,4 +99,4 @@ class OpenAIProvider(LLMInterface):
         }
     
     def process_text(self, text: str):
-        return text[:self.default_input_max_characters].strip
+        return text[:self.default_input_max_characters].strip()
