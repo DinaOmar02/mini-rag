@@ -1,5 +1,5 @@
 from ..LLMInterface import LLMInterface
-from ..LLMEnums import CohereEnums, DocumentTypeQuery
+from ..LLMEnums import CohereEnums, DocumentTypeEnum
 import cohere
 import logging
 
@@ -22,6 +22,8 @@ class CohereProvider(LLMInterface):
         self.embedding_size = None
 
         self.client = cohere.Client(api_key= self.api_key)
+
+        self.enums = CohereEnums
 
         self.logger = logging.getLogger(__name__)
 
@@ -76,14 +78,14 @@ class CohereProvider(LLMInterface):
             return None
         
         input_type = CohereEnums.DOCUMENT.value
-        if document_type == DocumentTypeQuery.QUERY.value:
+        if document_type == DocumentTypeEnum.QUERY.value:
             input_type = CohereEnums.QUERY.value
         
         response = self.client.embed(
         model=self.embedding_model_id,
         texts=[self.process_text(text)],
         input_type = input_type,
-        embedding_type = ["float"]
+        embedding_types = ["float"]
         ) 
         
         if not response or not response.embeddings or not response.embeddings.float:

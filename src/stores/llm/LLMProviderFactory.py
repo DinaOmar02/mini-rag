@@ -11,6 +11,7 @@ class LLMProviderFactory():
         if provider == LLMEnums.OPENAI.value:
             llm_provider = OpenAIProvider(
                 api_key= self.config.OPENAI_API_KEY,
+                api_url= self.config.OPENAI_URL,
                 default_input_max_characters= self.config.DEFAULT_INPUT_MAX_CHARACTERS,
                 default_generation_max_output= self.config.DEFAULT_GENERATION_MAX_OUTPUT,
                 default_generation_temperature= self.config.DEFAULT_GENERATION_TEMPERATURE

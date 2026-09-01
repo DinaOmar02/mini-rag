@@ -24,8 +24,10 @@ class OpenAIProvider(LLMInterface):
 
         self.client = OpenAI(
             api_key= self.api_key,
-            api_url = self.api_url
+            base_url = self.api_url if self.api_url and len(self.api_url) else None
         )
+
+        self.enums = OpenAIEnums
 
         self.logger = logging.getLogger(__name__)
 
@@ -43,7 +45,7 @@ class OpenAIProvider(LLMInterface):
             self.logger.error("OpenAI client was not set")
             return None
         
-        if not self.embedding_model_id:
+        if not self.generation_model_id:
             self.logger.error("generation model was not set")
             return None
         
@@ -62,11 +64,11 @@ class OpenAIProvider(LLMInterface):
             temperature= temperature
         )
 
-        if not response or not response.choices or not len(response.choices)==0 or not response.choices[0].message:
+        if not response or not response.choices or len(response.choices)==0 or not response.choices[0].message:
             self.logger.error("Error while generating text using OpenAI")
             return None
         
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
 
 
 
