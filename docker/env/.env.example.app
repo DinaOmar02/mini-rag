@@ -1,0 +1,39 @@
+APP_NAME="mini-RaG"
+APP_Version="0.1"
+
+FILE_ALLOWED_TYPES=["text/plain", "application/pdf"]
+FILE_MAX_SIZE=10
+FILE_CHUNLK_SIZE=512000
+
+POSTGRES_HOST="pgvector"
+POSTGRES_PORT=5432
+POSTGRES_USERNAME="postgres"
+POSTGRES_PASSWORD="postgres_password"
+POSTGRES_MAIN_DATABASE="minirag"
+
+#------------------- LLM Config -------------------#
+GENERATION_BACKEND = "OPENAI"
+EMBEDDING_BACKEND = "COHERE"
+
+OPENAI_API_KEY="_____"
+OPENAI_URL="https://5102-34-16-173-120.ngrok-free.app/v1/"
+COHERE_API_KEY="_____"
+
+GENERATION_MODEL_ID = "gemma2:9b-instruct-q5_0"
+EMBEDDING_MODEL_ID = "embed-multilingual-v3.0"
+EMBEDDING_MODEL_SIZE = 1024
+
+DEFAULT_INPUT_MAX_CHARACTERS = 1024
+DEFAULT_GENERATION_MAX_OUTPUT = 200
+DEFAULT_GENERATION_TEMPERATURE = 0.1
+
+#------------------- Vector DB Config -------------------#
+VECTOR_DB_BACKEND_LITERAL = ["QDRANT", "PGVECTOR"]
+VECTOR_DB_BACKEND = "PGVECTOR"
+VECTOR_DB_PATH = "qdrant_db"
+VECTOR_DB_DISTANCE_METHOD = "cosine"
+VECTOR_DB_PGVEC_INDEX_THREADHOLD = 500
+
+#------------------- Template Config -------------------#
+PRIMARY_LANG = "en"
+DEFAULT_LANG = "en"
