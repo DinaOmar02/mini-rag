@@ -9,11 +9,12 @@ from models.db_schemes import RetrievedDocument
 
 class QDrantDBProvider(VectorDBInterface):
 
-    def __init__(self, db_path: str, distance_method: str = None):
-
-
+    def __init__(self, db_client , default_vector_size: int = 786, 
+                 distance_method: str = None, index_threshold:int = 100):
+        
         self.client = None
-        self.db_path = db_path
+        self.db_client = db_client
+        self.default_vector_size = default_vector_size
 
         if distance_method == DistanceMethodEnums.COSINE.value:
             self.distance_method = models.Distance.COSINE
@@ -24,28 +25,28 @@ class QDrantDBProvider(VectorDBInterface):
         else:
             raise ValueError("Unsupported distance method")
 
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('uvicorn')
     
-    def connect(self):
-        self.client = QdrantClient(path=self.db_path)
+    async def connect(self):
+        self.client = QdrantClient(path=self.db_client)
     
-    def disconnect(self):
+    async def disconnect(self):
         self.client = None
     
-    def is_collection_existed(self, collection_name: str) -> bool:
+    async def is_collection_existed(self, collection_name: str) -> bool:
         return self.client.collection_exists(collection_name=collection_name)
 
-    def list_all_collections(self) -> List:
+    async def list_all_collections(self) -> List:
         return self.client.get_collections()
     
-    def get_collection_info(self, collection_name: str) -> dict:
+    async def get_collection_info(self, collection_name: str) -> dict:
         return self.client.get_collection(collection_name=collection_name)
     
-    def delete_collection(self, collection_name: str):
+    async def delete_collection(self, collection_name: str):
         if self.is_collection_existed(collection_name):
             self.client.delete_collection(collection_name=collection_name)
 
-    def create_collection(self,
+    async def create_collection(self,
                            collection_name: str,
                              embedding_size: int,
                              do_reset: bool = False):
@@ -53,21 +54,20 @@ class QDrantDBProvider(VectorDBInterface):
             self.delete_collection(collection_name)
 
         if not self.is_collection_existed(collection_name):
+            self.logger.info(f'Creating new QDrant collection: {collection_name}')
             _ = self.client.create_collection(
                 collection_name=collection_name,
                 vectors_config=models.VectorParams(
                     size=embedding_size,
                     distance=self.distance_method
-                )
-                
+                )           
             )
         
             return True
         
         return False
-
     
-    def insert_one(self, collection_name: str,
+    async def insert_one(self, collection_name: str,
                        text: str, vector: list,
                         metadata: dict=None,
                         record_id: str=None):
@@ -76,8 +76,6 @@ class QDrantDBProvider(VectorDBInterface):
         if not self.is_collection_existed(collection_name):
             self.logger.error(f" Cant insert new record to collection not existed '{collection_name}")
             return False
-        
-
 
         try:
             _ = self.client.upload_records(
@@ -96,9 +94,8 @@ class QDrantDBProvider(VectorDBInterface):
             return False
            
         return True
-    
 
-    def insert_many(self, collection_name: str,
+    async def insert_many(self, collection_name: str,
                      texts: list, vectors: list,
                        metadata: list=None,record_ids: list=None,
                          batch_size: int = 50):
@@ -147,7 +144,7 @@ class QDrantDBProvider(VectorDBInterface):
         return True
 
 
-    def search_by_vector(self, collection_name: str,
+    async def search_by_vector(self, collection_name: str,
                          query_vector: list,
                          top_k: int = 5) -> list:
         
@@ -171,23 +168,3 @@ class QDrantDBProvider(VectorDBInterface):
             })
             for result in results
         ]
-
-        
-
-
-        
-
-
-
-
-            
-    
-        
-
-    
-
-    
-
-
-    
-
